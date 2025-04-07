@@ -1,0 +1,7 @@
+version: "3.9"
+services:
+  video-api:
+    build: .
+    ports:
+      - "5000:5000"
+    container_name: video-api
