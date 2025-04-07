@@ -1,0 +1,18 @@
+# Diretórios que não devem ser enviados
+__pycache__/
+.env/
+venv/
+*.pyc
+*.pyo
+*.pyd
+*.swp
+.DS_Store
+.idea/
+*.log
+*.mp4
+*.avi
+*.mov
+videos/
+video/
+.git/
+.gcloudignore
