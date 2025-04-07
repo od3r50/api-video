@@ -1,0 +1,34 @@
+{
+    "width": 540,
+    "height": 960,
+    "elements": [
+      {
+        "name": "Video-1",
+        "type": "video",
+        "track": 1,
+        "time": 0,
+        "duration": 5,
+        "source": "placeholder"
+      },
+      {
+        "name": "Video-2",
+        "type": "video",
+        "track": 1,
+        "time": 5,
+        "duration": 5,
+        "source": "placeholder"
+      },
+      {
+        "name": "Text-1",
+        "type": "text",
+        "track": 2,
+        "time": 0,
+        "duration": 5,
+        "x": 0,
+        "y": 0,
+        "text": "Texto Original",
+        "font_size": 70
+      }
+    ]
+  }
+  
