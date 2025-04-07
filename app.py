@@ -6,10 +6,9 @@ import json
 from uuid import uuid4
 import tempfile
 import shutil
+from config import VIDEO_DIR
 
 app = Flask(__name__)
-VIDEO_DIR = "videos"
-os.makedirs(VIDEO_DIR, exist_ok=True)
 
 def baixar_arquivo(url, destino):
     r = requests.get(url, stream=True)
