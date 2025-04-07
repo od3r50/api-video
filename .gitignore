@@ -1,2 +1,58 @@
-/videos
-/vapi
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+vapi/
+venv/
+env/
+.vscode/
+
+# Distribuição
+build/
+dist/
+*.egg-info/
+
+# Logs
+*.log
+
+# Arquivos temporários
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+*.DS_Store
+Thumbs.db
+
+# Arquivos do sistema
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Arquivos de testes
+.coverage
+.tox/
+.pytest_cache/
+
+# Configuração local (ex: credenciais, env)
+.env
+.env.*
+
+# Vídeos e arquivos grandes gerados
+*.mp4
+*.mov
+*.avi
+*.webm
+*.mkv
+*.wav
+*.mp3
+*.flac
+
+# Pasta de arquivos gerados
+output/
+videos/
+tmp/
+temp/
