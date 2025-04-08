@@ -28,6 +28,7 @@ def load_template(template_id, modifications):
 @bp.route("/render", methods=["POST"])
 def render_video():
     body = request.json
+    temp_dirs = []
 
     try:
         data = load_template(body["template_id"], body.get("modifications", {}))

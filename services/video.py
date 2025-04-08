@@ -33,7 +33,7 @@ def process_elements(data):
         elif tipo == "audio":
             src = el["source"]
             audio_path, temp_dir = download_file(src)
-            temp_dirs.append(temp_dirs)
+            temp_dirs.append(temp_dir)
             audio = AudioFileClip(audio_path).subclip(0, duration).set_start(time)
             audio_clips.append(audio)
 
