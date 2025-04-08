@@ -14,10 +14,11 @@ RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
 # Copia a política ajustada para o local correto
-COPY utils/policy.xml /etc/ImageMagick-6/policy.xml
+COPY examples/policy.xml /etc/ImageMagick-6/policy.xml
 
 # Expõe a porta que o Gunicorn vai usar
 EXPOSE 5000
 
 # Comando para iniciar a API com Gunicorn
-CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "app:app"]
+CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "app:create_app()"]
+

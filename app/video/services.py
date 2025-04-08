@@ -1,6 +1,6 @@
 from moviepy.editor import VideoFileClip, TextClip, CompositeVideoClip, CompositeAudioClip, AudioFileClip
-from services.file_utils import download_file
-from config import VIDEO_DIR
+from app.services.file_utils import download_file
+from app.config import VIDEO_DIR
 import os
 from uuid import uuid4
 from threading import Thread
@@ -19,8 +19,7 @@ def render_clip_in_thread(clip, audio_clip, output, fps, job_id=None, jobs_dict=
             if jobs_dict is not None and job_id:
                 jobs_dict[job_id] = {"status": "error", "message": str(e)}
 
-    t = Thread(target=render)
-    t.start()
+    Thread(target=render).start()
 
 def process_elements(data):
     clips = []
