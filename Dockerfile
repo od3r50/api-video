@@ -20,4 +20,4 @@ COPY utils/policy.xml /etc/ImageMagick-6/policy.xml
 EXPOSE 5000
 
 # Comando para iniciar a API com Gunicorn
-CMD ["gunicorn", "-w", "2", "-b", "0.0.0.0:5000", "app:app", "timeout", "400"]
+CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "app:app"]

@@ -4,7 +4,7 @@ from config import VIDEO_DIR
 import os
 from uuid import uuid4
 
-def process_elements(data):
+def process_elements(data, output_path=None):
     clips = []
     audio_clips = []
     temp_dirs = []
@@ -43,7 +43,21 @@ def process_elements(data):
         combined_audio = CompositeAudioClip(audio_clips)
         final = final.set_audio(combined_audio)
 
-    output = os.path.join(VIDEO_DIR, f"{uuid4().hex}.mp4")
+    output = output_path or os.path.join(VIDEO_DIR, f"{uuid4().hex}.mp4")
     final.write_videofile(output, fps=24)
 
     return output, temp_dirs
+
+def render_worker(data, output_path):
+    from services.file_utils import clean_temp_files
+
+    temp_dirs = []
+    try:
+        _, temp_dirs = process_elements(data)
+        print(f"[INFO] Render finalizado: {output_path}")
+    except Exception as e:
+        print(f"[ERRO] Render falhou: {e}")
+
+    finally:
+        for td in temp_dirs:
+            clean_temp_files(td)

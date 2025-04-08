@@ -1,11 +1,16 @@
 from flask import Blueprint, request, jsonify, send_file
 from moviepy.editor import *
-import json
+import json, os
 from services.file_utils import clean_temp_files
+from services.video import render_worker
+from threading import Thread
+from config import VIDEO_DIR
+from uuid import uuid4
+
 from services.video import process_elements
 
-
 bp = Blueprint("render", __name__)
+jobs = {}
 
 def load_template(template_id, modifications):
     path = f"templates/{template_id}.json"
@@ -28,16 +33,38 @@ def load_template(template_id, modifications):
 @bp.route("/render", methods=["POST"])
 def render_video():
     body = request.json
-    temp_dirs = []
+    job_id = uuid4().hex
+    output_path = f"outputs/{job_id}"
 
-    try:
-        data = load_template(body["template_id"], body.get("modifications", {}))
-        video_path, temp_dirs = process_elements(data)
-        return send_file(video_path, as_attachment=True)
+    def run():
+        temp_dirs = []
+        try:
+            data = load_template(body["template_id"], body.get("modifications", {}))
+            video_path, temp_dirs = process_elements(data)
+            jobs[job_id] = {"status": "done", "path": video_path}
+        except Exception as e:
+            jobs[job_id] = {"status": "error", "message": str(e)}
 
-    except Exception as e:
-        return jsonify({"error": str(e)}), 400
-    
-    finally:
-        for td in temp_dirs:
-            clean_temp_files(td)
+        finally:
+            for td in temp_dirs:
+                clean_temp_files(td)
+
+    jobs[job_id] = {"status": "processing"}
+    t = Thread(target=run)
+    t.start()
+
+    return jsonify({"job_id": job_id}), 202
+
+@bp.route("/render/status/<job_id>", methods=["GET"])
+def check_status(job_id):
+    job = jobs.get(job_id)
+    if not job:
+        return jsonify({"error": "Job not found"}), 404
+    return jsonify(job)
+
+@bp.route("/render/result/<job_id>", methods=["GET"])
+def get_result(job_id):
+    job = jobs.get(job_id)
+    if not job or job["status"] != "done":
+        return jsonify({"error": "Video not ready"}), 404
+    return send_file(job["path"], as_attachment=True)
