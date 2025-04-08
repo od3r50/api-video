@@ -2,7 +2,6 @@ from flask import Blueprint, request, jsonify, send_file
 from moviepy.editor import *
 import json, os
 from services.file_utils import clean_temp_files
-from services.video import render_worker
 from threading import Thread
 from config import VIDEO_DIR
 from uuid import uuid4
