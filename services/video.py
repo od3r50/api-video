@@ -59,17 +59,3 @@ def process_elements(data):
     combined_audio = CompositeAudioClip(audio_clips) if audio_clips else None
 
     return final_clip, combined_audio, temp_dirs
-
-def render_worker(data, output_path):
-    from services.file_utils import clean_temp_files
-
-    temp_dirs = []
-    try:
-        _, temp_dirs = process_elements(data)
-        print(f"[INFO] Render finalizado: {output_path}")
-    except Exception as e:
-        print(f"[ERRO] Render falhou: {e}")
-
-    finally:
-        for td in temp_dirs:
-            clean_temp_files(td)
