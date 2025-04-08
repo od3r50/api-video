@@ -3,8 +3,26 @@ from services.file_utils import download_file
 from config import VIDEO_DIR
 import os
 from uuid import uuid4
+from threading import Thread
 
-def process_elements(data, output_path=None):
+def render_clip_in_thread(clip, audio_clip, output, fps, job_id=None, jobs_dict=None):
+    def render():
+        try:
+            final_clip = clip.set_audio(audio_clip) if audio_clip else clip
+            final_clip.write_videofile(output, fps=fps)
+
+            if jobs_dict is not None and job_id:
+                jobs_dict[job_id]["status"] = "done"
+                jobs_dict[job_id]["path"] = output
+
+        except Exception as e:
+            if jobs_dict is not None and job_id:
+                jobs_dict[job_id] = {"status": "error", "message": str(e)}
+
+    t = Thread(target=render)
+    t.start()
+
+def process_elements(data):
     clips = []
     audio_clips = []
     temp_dirs = []
@@ -37,16 +55,10 @@ def process_elements(data, output_path=None):
             audio = AudioFileClip(audio_path).subclip(0, duration).set_start(time)
             audio_clips.append(audio)
 
-    final = CompositeVideoClip(clips, size=(data["width"], data["height"]))
+    final_clip = CompositeVideoClip(clips, size=(data["width"], data["height"]))
+    combined_audio = CompositeAudioClip(audio_clips) if audio_clips else None
 
-    if audio_clips:
-        combined_audio = CompositeAudioClip(audio_clips)
-        final = final.set_audio(combined_audio)
-
-    output = output_path or os.path.join(VIDEO_DIR, f"{uuid4().hex}.mp4")
-    final.write_videofile(output, fps=24)
-
-    return output, temp_dirs
+    return final_clip, combined_audio, temp_dirs
 
 def render_worker(data, output_path):
     from services.file_utils import clean_temp_files

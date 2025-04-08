@@ -40,8 +40,10 @@ def render_video():
         temp_dirs = []
         try:
             data = load_template(body["template_id"], body.get("modifications", {}))
-            video_path, temp_dirs = process_elements(data)
-            jobs[job_id] = {"status": "done", "path": video_path}
+            final_clip, audio_clip, temp_dirs = process_elements(data)
+            output_path = os.path.join(VIDEO_DIR, f"{job_id}.mp4")
+            from services.video import render_clip_in_thread
+            render_clip_in_thread(final_clip, audio_clip, output_path, fps=24, job_id=job_id, jobs_dict=jobs)
         except Exception as e:
             jobs[job_id] = {"status": "error", "message": str(e)}
 
