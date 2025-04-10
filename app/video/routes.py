@@ -13,6 +13,7 @@ bp = Blueprint("video", __name__)
 def render_video(current_user):
     body = request.json
     job_id = start_render_job(
+        current_user,
         template_id=body["template_id"],
         modifications=body.get("modifications", {})
     )
