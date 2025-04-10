@@ -1,10 +1,10 @@
 import os
-from app.celery_worker import celery
+from app.celery_app import celery
 
 from app.config import VIDEO_DIR
 from app.video.utils import process_elements, load_template
 
-@celery.task(bind=True)
+@celery.task(bind=True, name='app.video.tasks.render_video_task')
 def render_video_task(self, template_id, modifications):   
     output = os.path.join(VIDEO_DIR, f"{self.request.id}.mp4")
 
