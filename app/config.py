@@ -9,8 +9,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 VIDEO_DIR = BASE_DIR / "videos"
 VIDEO_DIR.mkdir(parents=True, exist_ok=True)
 
-print("Banco:", os.getenv("DATABASE_URL"))
-
 class Config:
     SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
