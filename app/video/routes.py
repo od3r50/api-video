@@ -4,11 +4,13 @@ from app.video.controller import (
     get_job_status,
     get_job_result_path
 )
+from app.auth.decorators import token_required
 
-video_bp = Blueprint("video", __name__)
+bp = Blueprint("video", __name__)
 
-@video_bp.route("/render", methods=["POST"])
-def render_video():
+@bp.route("/render", methods=["POST"])
+@token_required
+def render_video(current_user):
     body = request.json
     job_id = start_render_job(
         template_id=body["template_id"],
@@ -16,15 +18,17 @@ def render_video():
     )
     return jsonify({"job_id": job_id}), 202
 
-@video_bp.route("/render/status/<job_id>", methods=["GET"])
-def check_status(job_id):
+@bp.route("/render/status/<job_id>", methods=["GET"])
+@token_required
+def check_status(current_user, job_id):
     job = get_job_status(job_id)
     if not job:
         return jsonify({"error": "Job not found"}), 404
     return jsonify(job)
 
-@video_bp.route("/render/result/<job_id>", methods=["GET"])
-def get_result(job_id):
+@bp.route("/render/result/<job_id>", methods=["GET"])
+@token_required
+def get_result(current_user, job_id):
     path = get_job_result_path(job_id)
     if not path:
         return jsonify({"error": "Video not ready"}), 404
