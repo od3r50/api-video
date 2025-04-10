@@ -13,8 +13,11 @@ services:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/vapi
       - SECRET_KEY=my-secret-key
       - FLASK_APP=run.py
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=db+postgresql://postgres:postgres@db:5432/vapi
     depends_on:
       - db
+      - redis
 
   db:
     image: postgres:15
@@ -28,6 +31,23 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+  
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - db  
+
+  redis:
+    image: redis:7
+    container_name: redis
+    ports:
+      - "6379:6379"
+      
 volumes:
   venv:
   postgres_data:
