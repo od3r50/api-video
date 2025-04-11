@@ -1,12 +1,12 @@
 from app.video.tasks import render_video_task
 from celery.result import AsyncResult
-from app.celery_worker import celery
+from app.celery_app import celery
 from app.models.job import Job
 from app.extensions import db
 
 def start_render_job(current_user, template_id, modifications):
     async_job = render_video_task.apply_async(args=[template_id, modifications])
-    print(async_job, "---------->")
+    
     job_data ={
         "id": async_job.id,
         "user_id": current_user.id,
