@@ -2,7 +2,7 @@ version: "3.9"
 services:
   app:
     build: .
-    command: gunicorn --workers 4 --bind 0.0.0.0 "app.factory:create_app()"
+    command: gunicorn --workers 4 --bind 0.0.0.0:5000 "app.factory:create_app()"
     volumes:
       - .:/app
       - venv:/app/venv
@@ -39,17 +39,15 @@ services:
       container_name: nginx-proxy
       ports:
         - "80:80"   
-        # - "443:443" # Descomente se for usar HTTPS
-      volumes:
-        # Monta a configuração customizada (substitua 'nginx.conf' pelo nome que usar)
+        - "443:443" 
+      volumes:        
         - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
-        # Monta o mesmo volume de estáticos que o 'web', como read-only
         - static_content:/app/app/static:ro
-        # Descomente e ajuste se for usar SSL/HTTPS
-        # - ./caminho/para/certificados:/etc/nginx/ssl/certs:ro
-        # - ./caminho/para/chave:/etc/nginx/ssl/private:ro
+        - /var/www/certbot:/var/www/certbot:rw
+        - /var/www/certbot/.well-known:/var/www/certbot/.well-known:rw
+        - /etc/letsencrypt:/etc/letsencrypt:ro
       depends_on:
-        - app # Garante que o 'web' inicie antes do Nginx
+        - app
       restart: unless-stopped
   db:
     image: postgres:15
