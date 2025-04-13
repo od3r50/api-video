@@ -6,8 +6,13 @@ services:
     volumes:
       - .:/app
       - venv:/app/venv
+    ports:
+      - "5000:5000"
     environment:
         - FLASK_ENV=development
+        - DATABASE_URL=postgresql://postgres:postgres@db:5432/vapi
+        - CELERY_BROKER_URL=redis://redis:6379/0
+        - CELERY_RESULT_BACKEND=db+postgresql://postgres:postgres@db:5432/vapi
 
   worker:
     build: .      
@@ -18,7 +23,6 @@ services:
     environment:
       - FLASK_ENV=development
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/vapi
-      - SECRET_KEY=my-secret-key
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=db+postgresql://postgres:postgres@db:5432/vapi
     env_file:
@@ -37,6 +41,10 @@ services:
       - "5050:80"
     depends_on:
       - db  
+
+  nginx:
+    command: ["echo", "Nginx desabilitado em DEV e não iniciado"]
+    ports: []
       
 volumes:
   venv:
