@@ -19,3 +19,10 @@ class Config:
     DB_HOST = os.getenv("POSTGRES_HOST", "db")  # nome do serviço no docker-compose
     DB_PORT = os.getenv("POSTGRES_PORT", "5432")
     DB_NAME = os.getenv("POSTGRES_DB", "vapi")
+
+    S3_ENDPOINT_URL = os.getenv('S3_ENDPOINT_URL')
+    AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_KEY_ID = os.getenv('AWS_SECRET_KEY_ID') # <- Corrigido aqui, estava 'KEY_ID' duplicado no meu exemplo anterior, perdão.
+    S3_BUCKET_NAME = os.getenv('S3_BUCKET_NAME')
+    AWS_REGION = os.getenv('AWS_REGION', 'us-east-1')
+    S3_USE_SSL = os.getenv('S3_USE_SSL', 'false').lower() == 'true'
