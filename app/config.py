@@ -26,3 +26,5 @@ class Config:
     S3_BUCKET_NAME = os.getenv('S3_BUCKET_NAME')
     AWS_REGION = os.getenv('AWS_REGION', 'us-east-1')
     S3_USE_SSL = os.getenv('S3_USE_SSL', 'false').lower() == 'true'
+
+    MINIO_URL_LOCAL = os.getenv('MINIO_URL_LOCAL')
