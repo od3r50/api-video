@@ -9,14 +9,15 @@ from app.core import s3_service
 from app.video.utils import process_elements, load_template
 from app.models.job import Job
 from app.extensions import db
+from app.video.services import get_job_by_id
 
 @celery.task(bind=True, name='app.video.tasks.render_video_task')
 def render_video_task(self, template_id, modifications):
-    job = Job.query.get(self.request.id)
+    job = get_job_by_id(self.request.id)
     
     s3_bucket_name = current_app.config.get('S3_BUCKET_NAME')
     output_object_name = f"{job.id}"
-    url_minio = current_app.config.get("S3_ENDPOINT_URL")
+    url_minio = current_app.config.get("MINIO_URL_LOCAL")
     url_to_file = f"{url_minio}/{s3_bucket_name}/{output_object_name}"
 
     output = os.path.join(VIDEO_DIR, f"{self.request.id}.mp4")
